@@ -1,0 +1,3 @@
+options:
+  # Whether or not to auto-update
+  auto-update: true
