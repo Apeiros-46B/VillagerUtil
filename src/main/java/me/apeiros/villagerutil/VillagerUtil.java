@@ -1,16 +1,15 @@
-package me.apeiros.CHANGEME;
+package me.apeiros.villagerutil;
 
 import io.github.mooy1.infinitylib.core.AbstractAddon;
-import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 
-public class ChangeMe extends AbstractAddon implements SlimefunAddon {
+public class VillagerUtil extends AbstractAddon {
 
     // Instance
-    private static ChangeMe instance;
+    private static VillagerUtil instance;
 
     // Auto update things
-    public ChangeMe() {
-        super("Apeiros-46B", "ChangeMe", "main", "options.auto-update");
+    public VillagerUtil() {
+        super("Apeiros-46B", "VillagerUtil", "main", "options.auto-update");
     }
 
     @Override
@@ -28,7 +27,7 @@ public class ChangeMe extends AbstractAddon implements SlimefunAddon {
         instance = null;
     }
 
-    public static ChangeMe i() {
+    public static VillagerUtil i() {
         return instance;
     }
 
