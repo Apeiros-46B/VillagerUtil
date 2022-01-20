@@ -76,54 +76,52 @@ public class TransportCharm extends SlimefunItem {
 
                 // Null checking
                 if (meta != null) {
-                    if (meta.getPersistentDataContainer() != null) {
-                        // Store the container
-                        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+                    // Store PDC
+                    PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
-                        // Get stored UUID
-                        UUID id = pdc.get(key, new UUIDTagType());
+                    // Get stored UUID
+                    UUID id = pdc.get(key, new UUIDTagType());
 
-                        if (id == null) {
-                            ChatColors.color("&cThere is no villager linked to this charm!");
-                            return;
-                        }
+                    if (id == null) {
+                        ChatColors.color("&cThere is no villager linked to this charm!");
+                        return;
+                    }
 
-                        // Attempt to get the villager
-                        Villager v = null;
+                    // Attempt to get the villager
+                    Villager v = null;
 
-                        // Loop through all entities
-                        for (World world : Bukkit.getWorlds()) {
-                            for (Entity en : world.getEntities()) {
-                                // Check if the entity is a villager
-                                if (en instanceof Villager) {
-                                    // Check if the UUIDs are the same
-                                    if (en.getUniqueId().equals(id)) {
-                                        v = (Villager) en;
-                                        break;
-                                    }
+                    // Loop through all entities
+                    for (World world : Bukkit.getWorlds()) {
+                        for (Entity en : world.getEntities()) {
+                            // Check if the entity is a villager
+                            if (en instanceof Villager) {
+                                // Check if the UUIDs are the same
+                                if (en.getUniqueId().equals(id)) {
+                                    v = (Villager) en;
+                                    break;
                                 }
                             }
                         }
+                    }
 
-                        // Check if villager exists
-                        if (v == null) {
-                            e.getPlayer().sendMessage(ChatColors.color("&cThe villager linked to this charm no longer exists!"));
-                        } else {
-                            // Store location
-                            Location l = optionalBlock.get().getRelative(e.getClickedFace()).getLocation();
+                    // Check if villager exists
+                    if (v == null) {
+                        e.getPlayer().sendMessage(ChatColors.color("&cThe villager linked to this charm no longer exists!"));
+                    } else {
+                        // Store location
+                        Location l = optionalBlock.get().getRelative(e.getClickedFace()).getLocation();
 
-                            // Teleport villager to location
-                            v.teleport(l);
+                        // Teleport villager to location
+                        v.teleport(l);
 
-                            // Remove entry from PDC
-                            pdc.remove(key);
+                        // Remove entry from PDC
+                        pdc.remove(key);
 
-                            // Reset lore of the item
-                            meta.setLore(noVillagerLore);
+                        // Reset lore of the item
+                        meta.setLore(noVillagerLore);
 
-                            // Set meta to the item
-                            item.setItemMeta(meta);
-                        }
+                        // Set meta to the item
+                        item.setItemMeta(meta);
                     }
                 }
             }

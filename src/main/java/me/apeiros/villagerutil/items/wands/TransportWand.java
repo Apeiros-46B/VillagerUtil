@@ -73,24 +73,22 @@ public class TransportWand extends SlimefunItem {
 
                     // Null checks
                     if (meta != null) {
-                        if (meta.getPersistentDataContainer() != null) {
-                            // Store PDC
-                            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+                        // Store PDC
+                        PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
-                            // Add UUID to PDC
-                            pdc.set(key, new UUIDTagType(), v.getUniqueId());
+                        // Add UUID to PDC
+                        pdc.set(key, new UUIDTagType(), v.getUniqueId());
 
-                            // Update lore of charm and set meta to charm
-                            meta.setLore(linkedVillagerLore);
-                            charm.setItemMeta(meta);
+                        // Update lore of charm and set meta to charm
+                        meta.setLore(linkedVillagerLore);
+                        charm.setItemMeta(meta);
 
-                            // Attempt to add charm to player inventory
-                            if (inv.addItem(charm).isEmpty()) {
-                                // Consume villager token
-                                inv.removeItem(new SlimefunItemStack(Setup.TOKEN, 1));
-                            } else {
-                                p.sendMessage(ChatColors.color("&cYou don't have enough inventory space!"));
-                            }
+                        // Attempt to add charm to player inventory
+                        if (inv.addItem(charm).isEmpty()) {
+                            // Consume villager token
+                            inv.removeItem(new SlimefunItemStack(Setup.TOKEN, 1));
+                        } else {
+                            p.sendMessage(ChatColors.color("&cYou don't have enough inventory space!"));
                         }
                     }
                 } else {

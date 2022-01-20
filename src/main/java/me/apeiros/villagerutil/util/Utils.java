@@ -26,7 +26,7 @@ public class Utils {
 
     // Remove profession from a villager and clear its experience
     public static void removeProfessionAndExp(Villager v) {
-        removeProfessionAndExp(v);
+        removeProfession(v);
         v.setVillagerExperience(0);
         v.setVillagerLevel(0);
     }
@@ -40,8 +40,12 @@ public class Utils {
     public static ItemStack makePotion(PotionData data) {
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
-        meta.setBasePotionData(data);
-        potion.setItemMeta(meta);
+
+        // Null check
+        if (meta != null) {
+            meta.setBasePotionData(data);
+            potion.setItemMeta(meta);
+        }
 
         return potion;
     }

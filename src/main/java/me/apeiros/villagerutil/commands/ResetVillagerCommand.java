@@ -11,6 +11,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 
 import me.apeiros.villagerutil.VillagerUtil;
 import me.apeiros.villagerutil.items.wands.TradeWand;
+import org.jetbrains.annotations.NotNull;
 
 public class ResetVillagerCommand implements CommandExecutor {
 
@@ -26,7 +27,7 @@ public class ResetVillagerCommand implements CommandExecutor {
     // Uses command number to check if command was run
     // using a Villager Trade Wand
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         // Check if the sender is a player
         if (sender instanceof Player) {
             Player p = (Player) sender;
