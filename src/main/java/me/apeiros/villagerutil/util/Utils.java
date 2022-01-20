@@ -1,12 +1,15 @@
-package me.apeiros.villagerutil.utils;
+package me.apeiros.villagerutil.util;
 
+import lombok.experimental.UtilityClass;
+import me.apeiros.villagerutil.VillagerUtil;
+
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
-
-import me.apeiros.villagerutil.VillagerUtil;
-
-import lombok.experimental.UtilityClass;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 
 @UtilityClass
 public class Utils {
@@ -23,7 +26,7 @@ public class Utils {
 
     // Remove profession from a villager and clear its experience
     public static void removeProfessionAndExp(Villager v) {
-        v.setProfession(Profession.NONE);
+        removeProfessionAndExp(v);
         v.setVillagerExperience(0);
         v.setVillagerLevel(0);
     }
@@ -31,6 +34,16 @@ public class Utils {
     // Create a NamespacedKey
     public static NamespacedKey key(String s) {
         return VillagerUtil.createKey(s);
+    }
+
+    // Create a potion
+    public static ItemStack makePotion(PotionData data) {
+        ItemStack potion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) potion.getItemMeta();
+        meta.setBasePotionData(data);
+        potion.setItemMeta(meta);
+
+        return potion;
     }
 
 }

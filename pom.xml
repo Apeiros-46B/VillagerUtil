@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.apeiros</groupId>
-    <artifactId>CHANGEME</artifactId>
+    <artifactId>VillagerUtil</artifactId>
     <version>MODIFIED</version>
 
     <properties>
@@ -53,7 +53,7 @@
                     <relocations>
                         <relocation>
                             <pattern>io.github.mooy1.infinitylib</pattern>
-                            <shadedPattern>me.apeiros.CHANGEME.infinitylib</shadedPattern>
+                            <shadedPattern>me.apeiros.villagerutil.infinitylib</shadedPattern>
                         </relocation>
                     </relocations>
 

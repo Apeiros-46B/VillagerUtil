@@ -23,3 +23,9 @@ api-version: 1.18
 ## This is required and marks Slimefun as a plugin dependency.
 depend:
 - Slimefun
+
+## Initializes the command used by the Villager Trade Wand.
+commands:
+  resetvillager:
+    description: Resets the trades and EXP of a villager
+    usage: Craft a Villager Trade Wand and right click a villager whose trades are locked
