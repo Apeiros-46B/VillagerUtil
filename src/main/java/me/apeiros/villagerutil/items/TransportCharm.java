@@ -1,16 +1,18 @@
 package me.apeiros.villagerutil.items;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -20,25 +22,16 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 
 import me.apeiros.villagerutil.Setup;
+import me.apeiros.villagerutil.VillagerUtil;
 import me.apeiros.villagerutil.util.UUIDTagType;
 import me.apeiros.villagerutil.util.Utils;
 
 public class TransportCharm extends SlimefunItem {
-
-    // Charm lore when there is no villager stored
-    private final List<String> noVillagerLore = List.of(
-        "&7A magical charm which will teleport",
-        "&7the associated villager to its location",
-        "&eRight Click &7to teleport the villager",
-        "",
-        "&7No villager linked",
-        "",
-        "&bTool &9&o(Villager Utils)"
-    );
 
     // NamespacedKey for PDC
     private final NamespacedKey key = Utils.key("stored_villager_uuid");
@@ -56,7 +49,7 @@ public class TransportCharm extends SlimefunItem {
     public TransportCharm(ItemGroup ig) {
         super(ig, Setup.TRANSPORT_CHARM, "VU_TRANSPORT_CHARM", transportWandRecipeType, new ItemStack[] {
             null, null, null,
-            null, PlayerHead.getItemStack(PlayerSkin.fromBase64(Setup.VILLAGER)), null,
+            null, new CustomItemStack(PlayerHead.getItemStack(PlayerSkin.fromBase64(Setup.VILLAGER)), "&aVillager"), null,
             null, null, null
         });
     }
@@ -74,16 +67,25 @@ public class TransportCharm extends SlimefunItem {
                 ItemStack item = e.getItem();
                 ItemMeta meta = item.getItemMeta();
 
-                // Null checking
+                // Null check
                 if (meta != null) {
-                    // Store PDC
+                    // Store PDC, player, and inventory
                     PersistentDataContainer pdc = meta.getPersistentDataContainer();
+                    Player p = e.getPlayer();
+                    Inventory inv = p.getInventory();
+
+                    // Whether or not tokens are used
+                    boolean useTokens = VillagerUtil.useTokens();
 
                     // Get stored UUID
                     UUID id = pdc.get(key, new UUIDTagType());
 
                     if (id == null) {
-                        ChatColors.color("&cThere is no villager linked to this charm!");
+                        p.sendMessage(ChatColors.color("&cThere is no villager linked to this charm!"));
+
+                        // Refund token
+                        refundToken(useTokens, inv, item);
+
                         return;
                     }
 
@@ -106,7 +108,10 @@ public class TransportCharm extends SlimefunItem {
 
                     // Check if villager exists
                     if (v == null) {
-                        e.getPlayer().sendMessage(ChatColors.color("&cThe villager linked to this charm no longer exists!"));
+                        p.sendMessage(ChatColors.color("&cThe villager linked to this charm no longer exists!"));
+
+                        // Refund token
+                        refundToken(useTokens, inv, item);
                     } else {
                         // Store location
                         Location l = optionalBlock.get().getRelative(e.getClickedFace()).getLocation();
@@ -114,14 +119,11 @@ public class TransportCharm extends SlimefunItem {
                         // Teleport villager to location
                         v.teleport(l);
 
-                        // Remove entry from PDC
-                        pdc.remove(key);
+                        // Play "Illusioner Displaces" sound
+                        v.getWorld().playSound(l, Sound.ENTITY_ILLUSIONER_MIRROR_MOVE, 1F, 1F);
 
-                        // Reset lore of the item
-                        meta.setLore(noVillagerLore);
-
-                        // Set meta to the item
-                        item.setItemMeta(meta);
+                        // Consume charm
+                        inv.removeItem(new CustomItemStack(item, 1));
                     }
                 }
             }
@@ -131,6 +133,21 @@ public class TransportCharm extends SlimefunItem {
     // Registers handler
     public void preRegister() {
         this.addItemHandler(getItemUseHandler());
+    }
+
+    // Refund token if tokens are enabled
+    private void refundToken(boolean useTokens, Inventory inv, ItemStack item) {
+        // Check if tokens are enabled in config
+        if (useTokens) {
+            // Refund token if there is available space
+            if (inv.addItem(Setup.TOKEN.clone()).isEmpty()) {
+                // Consume charm
+                inv.removeItem(new CustomItemStack(item, 1));
+            }
+        } else {
+            // Consume charm
+            inv.removeItem(new CustomItemStack(item, 1));
+        }
     }
     
 }

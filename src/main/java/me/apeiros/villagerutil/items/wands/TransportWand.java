@@ -2,8 +2,11 @@ package me.apeiros.villagerutil.items.wands;
 
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -14,7 +17,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
@@ -28,15 +30,15 @@ import me.apeiros.villagerutil.util.Utils;
 
 public class TransportWand extends SlimefunItem {
 
-    // Charm lore when there is no villager stored
+    // Charm lore when there is a villager linked
     private final List<String> linkedVillagerLore = List.of(
-        "&7A magical charm which will teleport",
-        "&7the associated villager to its location",
-        "&eRight Click &7to teleport the villager",
+        ChatColors.color("&7A magical charm which will teleport"),
+        ChatColors.color("&7the associated villager to its location"),
+        ChatColors.color("&eRight Click &7to teleport the villager"),
         "",
-        "&aVillager linked!",
+        ChatColors.color("&aVillager linked!"),
         "",
-        "&bTool &9&o(Villager Utils)"
+        ChatColors.color("&bTool &9&o(Villager Utils)")
     );
 
     // NamespacedKey for PDC
@@ -57,42 +59,57 @@ public class TransportWand extends SlimefunItem {
             // Cancel event
             e.setCancelled(true);
 
+            // Check if the clicked entity is a villager
             Entity en = e.getRightClicked();
             if (en instanceof Villager) {
+                // Store villager, player, and inventory
                 Villager v = (Villager) en;
                 Player p = e.getPlayer();
                 Inventory inv = p.getInventory();
 
-                // Check for villager tokens and permission
-                if (inv.contains(Setup.TOKEN) && 
-                    Slimefun.getProtectionManager().hasPermission(p, p.getLocation(), Interaction.INTERACT_ENTITY)) {
+                // Check for permission
+                if (!Slimefun.getProtectionManager().hasPermission(p, p.getLocation(), Interaction.INTERACT_ENTITY)) {
+                    p.sendMessage(ChatColors.color("&cYou don't have permission!"));
+                    v.shakeHead();
+                    return;
+                }
 
-                    // Create transport charm
-                    ItemStack charm = Setup.TRANSPORT_CHARM;
-                    ItemMeta meta = charm.getItemMeta();
-
-                    // Null checks
-                    if (meta != null) {
-                        // Store PDC
-                        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-
-                        // Add UUID to PDC
-                        pdc.set(key, new UUIDTagType(), v.getUniqueId());
-
-                        // Update lore of charm and set meta to charm
-                        meta.setLore(linkedVillagerLore);
-                        charm.setItemMeta(meta);
-
-                        // Attempt to add charm to player inventory
-                        if (inv.addItem(charm).isEmpty()) {
-                            // Consume villager token
-                            inv.removeItem(new SlimefunItemStack(Setup.TOKEN, 1));
-                        } else {
-                            p.sendMessage(ChatColors.color("&cYou don't have enough inventory space!"));
-                        }
-                    }
-                } else {
+                // Check for villager tokens
+                if (!Utils.hasToken(p, inv)) {
                     p.sendMessage(ChatColors.color("&cInsufficient Villager Tokens!"));
+                    v.shakeHead();
+                    return;
+                }
+
+                // Create transport charm
+                ItemStack charm = Setup.TRANSPORT_CHARM.clone();
+                ItemMeta meta = charm.getItemMeta();
+
+                // Null check
+                if (meta != null) {
+                    // Store PDC
+                    PersistentDataContainer pdc = meta.getPersistentDataContainer();
+
+                    // Add UUID to PDC
+                    pdc.set(key, new UUIDTagType(), v.getUniqueId());
+
+                    // Update lore of charm and set meta to charm
+                    meta.setLore(linkedVillagerLore);
+                    charm.setItemMeta(meta);
+
+                    // Attempt to add charm to player inventory
+                    if (inv.addItem(charm).isEmpty()) {
+                        // Consume villager token
+                        Utils.removeToken(p, inv);
+                    } else {
+                        p.sendMessage(ChatColors.color("&cYou don't have enough inventory space!"));
+                    }
+
+                    // Play sounds
+                    World w = v.getWorld();
+                    Location l = v.getLocation();
+                    w.playSound(l, Sound.ITEM_LODESTONE_COMPASS_LOCK, 1F, 1.5F);
+                    w.playSound(l, Sound.BLOCK_BEACON_POWER_SELECT, 1F, 1F);
                 }
             }
         };

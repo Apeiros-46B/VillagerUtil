@@ -2,12 +2,6 @@ package me.apeiros.villagerutil;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.scheduler.BukkitTask;
-
 import io.github.mooy1.infinitylib.core.AbstractAddon;
 
 public class VillagerUtil extends AbstractAddon {
@@ -17,6 +11,9 @@ public class VillagerUtil extends AbstractAddon {
 
     // Number for confirmation of villager reset command
     private static int commandNumber;
+
+    // Whether or not token consumption is enabled
+    private static boolean useTokens;
 
     // Auto update things
     public VillagerUtil() {
@@ -30,6 +27,9 @@ public class VillagerUtil extends AbstractAddon {
 
         // Command number
         commandNumber = ThreadLocalRandom.current().nextInt(0, 1_000_000);
+
+        // Whether or not to consume tokens
+        useTokens = this.getConfig().getBoolean("options.use-tokens");
 
         // Setup
         Setup.setup(this);
@@ -49,15 +49,8 @@ public class VillagerUtil extends AbstractAddon {
         return commandNumber;
     }
 
-    @Nullable
-    public static BukkitTask runSync(@Nonnull Runnable runnable) {
-        Validate.notNull(runnable, "Cannot run null");
-        
-        if (instance == null || !instance.isEnabled()) {
-            return null;
-        }
-
-        return instance.getServer().getScheduler().runTask(instance, runnable);
+    public static boolean useTokens() {
+        return useTokens;
     }
 
 }

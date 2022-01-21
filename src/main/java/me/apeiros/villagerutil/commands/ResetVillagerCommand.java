@@ -2,6 +2,8 @@ package me.apeiros.villagerutil.commands;
 
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,12 +13,11 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 
 import me.apeiros.villagerutil.VillagerUtil;
 import me.apeiros.villagerutil.items.wands.TradeWand;
-import org.jetbrains.annotations.NotNull;
 
 public class ResetVillagerCommand implements CommandExecutor {
 
-    // Number pattern
-    Pattern numPattern = Pattern.compile("^[0-9]$");
+    // Pattern used to check if a string is a number
+    Pattern numPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
     // Constructor which initializes the command
     public ResetVillagerCommand(VillagerUtil p) {
@@ -39,7 +40,7 @@ public class ResetVillagerCommand implements CommandExecutor {
             } else {
                 commandNumber = -1;
             }
-            
+
             // Check if the command number if correct
             if (commandNumber == VillagerUtil.getCommandNumber()) {
                 // Reset villager's trades

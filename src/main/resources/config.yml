@@ -1,3 +1,6 @@
 options:
-  # Whether or not to auto-update
+  # Whether or not to automatically update VillagerUtil
   auto-update: true
+  
+  # Whether or not Villager Tokens should be consumed when a Villager Wand is used
+  use-tokens: true
