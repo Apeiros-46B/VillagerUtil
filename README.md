@@ -4,7 +4,7 @@
 
 **A small Slimefun4 addon that adds a few items that makes using Minecraft villagers easier**
 
-Requires Java 17 and [Slimefun](https://github.com/Slimefun/Slimefun4)
+Requires Minecraft 1.18 and [Slimefun](https://github.com/Slimefun/Slimefun4)
 
 ---
 
