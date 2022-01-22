@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -119,8 +120,11 @@ public class TransportCharm extends SlimefunItem {
                         // Teleport villager to location
                         v.teleport(l.add(0.5, 0.5, 0.5));
 
-                        // Play "Illusioner Displaces" sound
-                        v.getWorld().playSound(l, Sound.ENTITY_ILLUSIONER_MIRROR_MOVE, 1F, 1F);
+                        // Play effects
+                        World w = v.getWorld();
+                        l = v.getLocation();
+                        w.playSound(l, Sound.ENTITY_ILLUSIONER_MIRROR_MOVE, 1F, 1F);
+                        w.spawnParticle(Particle.PORTAL, l, 150);
 
                         // Consume charm
                         inv.removeItem(new CustomItemStack(item, 1));
