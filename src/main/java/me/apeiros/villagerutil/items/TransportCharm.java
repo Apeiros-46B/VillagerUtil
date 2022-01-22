@@ -117,7 +117,7 @@ public class TransportCharm extends SlimefunItem {
                         Location l = optionalBlock.get().getRelative(e.getClickedFace()).getLocation();
 
                         // Teleport villager to location
-                        v.teleport(l);
+                        v.teleport(l.add(0.5, 0.5, 0.5));
 
                         // Play "Illusioner Displaces" sound
                         v.getWorld().playSound(l, Sound.ENTITY_ILLUSIONER_MIRROR_MOVE, 1F, 1F);
