@@ -1,23 +1,28 @@
 package me.apeiros.villagerutil;
 
-import lombok.experimental.UtilityClass;
-
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.attributes.MachineTier;
+import io.github.thebusybiscuit.slimefun4.core.attributes.MachineType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
+import io.github.thebusybiscuit.slimefun4.utils.LoreBuilder;
+import lombok.experimental.UtilityClass;
 import me.apeiros.villagerutil.commands.ResetVillagerCommand;
+import me.apeiros.villagerutil.items.AutoTrader;
+import me.apeiros.villagerutil.items.TradeMap;
 import me.apeiros.villagerutil.items.TransportCharm;
 import me.apeiros.villagerutil.items.wands.CureWand;
 import me.apeiros.villagerutil.items.wands.NitwitWand;
 import me.apeiros.villagerutil.items.wands.TradeWand;
 import me.apeiros.villagerutil.items.wands.TransportWand;
 import me.apeiros.villagerutil.util.Utils;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 @UtilityClass
 public class Setup {
@@ -26,6 +31,17 @@ public class Setup {
     public static final String VILLAGER = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhOGVmMjQ1OGEyYjEwMjYwYjg3NTY1NThmNzY3OWJjYjdlZjY5MWQ0MWY1MzRlZmVhMmJhNzUxMDczMTVjYyJ9fX0=";
 
     // Item constants
+    public static final ItemStack TRADE_MAP_BORDER = new CustomItemStack(
+            Material.WHITE_STAINED_GLASS_PANE, "&fTrade Map Input",
+            "&7Place a &6Trade Map &7in the surrounded Slot");
+    public static final ItemStack PREVIEW_BORDER = new CustomItemStack(
+            Material.YELLOW_STAINED_GLASS_PANE, "&eTrade Preview",
+            "&7A Preview of the Selected Trade");
+    public static final ItemStack ARROW_ITEM = new CustomItemStack(
+            PlayerHead.getItemStack(PlayerSkin.fromBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjgyYWQxYjljYjRkZDIxMjU5YzBkNzVhYTMxNWZmMzg5YzNjZWY3NTJiZTM5NDkzMzgxNjRiYWM4NGE5NmUifX19")),
+            " ");
+    public static final ItemStack FILLER_ITEM = new CustomItemStack(
+            Material.LIGHT_GRAY_STAINED_GLASS_PANE, " ");
     public static final SlimefunItemStack ESSENCE = new SlimefunItemStack(
             "VU_ESSENCE", Material.GLOWSTONE_DUST, "&dVillager Essence",
             "&7A rare, mysterious dust which is a key",
@@ -79,6 +95,21 @@ public class Setup {
             "",
             "&bTool &9&o(Villager Utils)");
 
+    public static final SlimefunItemStack TRADE_MAP = new SlimefunItemStack(
+            "VU_TRADE_MAP", Material.PAPER, "&6Trade Map",
+            "&eRight Click &7on a villager",
+            "&7to save its trades",
+            " ",
+            "&bTool &9&o(Villager Utils)");
+
+    public static final SlimefunItemStack AUTO_TRADER = new SlimefunItemStack(
+            "VU_AUTO_TRADER", Material.REDSTONE_LAMP, "&6Villager Auto Trader",
+            "&eInput a Trade Map & Select a Trade to prepare for Processing",
+            " ",
+            LoreBuilder.machine(MachineTier.ADVANCED, MachineType.MACHINE),
+            LoreBuilder.powerBuffer(160),
+            LoreBuilder.powerPerSecond(16));
+
     // Setup methods
     public static void setup(VillagerUtil p) {
         // Setup category and researches
@@ -109,5 +140,7 @@ public class Setup {
         new NitwitWand(ig).register(p);
         new TradeWand(ig).register(p);
         new TransportWand(ig).register(p);
+        new TradeMap(ig).register(p);
+        new AutoTrader(ig).setCapacity(160).setEnergyConsumption(16).setProcessingSpeed(1).register(p);
     }
 }
