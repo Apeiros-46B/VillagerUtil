@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.machines.MachineProcessor;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.handlers.SimpleBlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.operations.CraftingOperation;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.BlockPosition;
@@ -56,7 +57,9 @@ public class AutoTrader extends AContainer {
 
     public AutoTrader(ItemGroup itemGroup) {
         super(itemGroup, Setup.AUTO_TRADER, RecipeType.ANCIENT_ALTAR, new ItemStack[] {
-
+                Setup.TOKEN, SlimefunItems.VILLAGER_RUNE, Setup.TOKEN,
+                SlimefunItems.VILLAGER_RUNE, SlimefunItems.ANDROID_MEMORY_CORE, SlimefunItems.VILLAGER_RUNE,
+                SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT
         });
 
         new BlockMenuPreset(getId(), getItemName()) {

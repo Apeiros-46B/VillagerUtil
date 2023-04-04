@@ -5,8 +5,10 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.apeiros.villagerutil.Setup;
 import me.apeiros.villagerutil.util.Utils;
 import org.bukkit.ChatColor;
@@ -28,8 +30,10 @@ import java.util.List;
 public class TradeMap extends SimpleSlimefunItem<EntityInteractHandler> {
     public TradeMap(ItemGroup itemGroup) {
         super(itemGroup, Setup.TRADE_MAP, RecipeType.ANCIENT_ALTAR, new ItemStack[] {
-
-        });
+                SlimefunItems.MAGICAL_BOOK_COVER, SlimefunItems.VILLAGER_RUNE, SlimefunItems.MAGICAL_BOOK_COVER,
+                SlimefunItems.VILLAGER_RUNE, Setup.TOKEN, SlimefunItems.VILLAGER_RUNE,
+                SlimefunItems.MAGICAL_BOOK_COVER, SlimefunItems.VILLAGER_RUNE, SlimefunItems.MAGICAL_BOOK_COVER
+        }, new CustomItemStack(Setup.TRADE_MAP, 2));
     }
 
     @NotNull
