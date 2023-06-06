@@ -1,23 +1,5 @@
 package me.apeiros.villagerutil.items;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
@@ -26,11 +8,26 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
-
 import me.apeiros.villagerutil.Setup;
 import me.apeiros.villagerutil.VillagerUtil;
 import me.apeiros.villagerutil.util.UUIDTagType;
 import me.apeiros.villagerutil.util.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class TransportCharm extends SlimefunItem {
 
@@ -75,7 +72,7 @@ public class TransportCharm extends SlimefunItem {
                     Player p = e.getPlayer();
                     Inventory inv = p.getInventory();
 
-                    // Whether or not tokens are used
+                    // Whether tokens are used
                     boolean useTokens = VillagerUtil.useTokens();
 
                     // Get stored UUID
@@ -93,18 +90,8 @@ public class TransportCharm extends SlimefunItem {
                     // Attempt to get the villager
                     Villager v = null;
 
-                    // Loop through all entities
-                    for (World world : Bukkit.getWorlds()) {
-                        for (Entity en : world.getEntities()) {
-                            // Check if the entity is a villager
-                            if (en instanceof Villager) {
-                                // Check if the UUIDs are the same
-                                if (en.getUniqueId().equals(id)) {
-                                    v = (Villager) en;
-                                    break;
-                                }
-                            }
-                        }
+                    if (Bukkit.getEntity(id) instanceof Villager) {
+                        v = (Villager) Bukkit.getEntity(id);
                     }
 
                     // Check if villager exists
@@ -135,6 +122,7 @@ public class TransportCharm extends SlimefunItem {
     }
 
     // Registers handler
+    @Override
     public void preRegister() {
         this.addItemHandler(getItemUseHandler());
     }

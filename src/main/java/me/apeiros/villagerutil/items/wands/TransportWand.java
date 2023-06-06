@@ -1,7 +1,14 @@
 package me.apeiros.villagerutil.items.wands;
 
-import java.util.List;
-
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import me.apeiros.villagerutil.Setup;
+import me.apeiros.villagerutil.util.UUIDTagType;
+import me.apeiros.villagerutil.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,18 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
-import me.apeiros.villagerutil.Setup;
-import me.apeiros.villagerutil.util.UUIDTagType;
-import me.apeiros.villagerutil.util.Utils;
+import java.util.List;
 
 public class TransportWand extends SlimefunItem {
 
@@ -60,19 +56,12 @@ public class TransportWand extends SlimefunItem {
             e.setCancelled(true);
 
             // Check if the clicked entity is a villager
+            Player p = e.getPlayer();
             Entity en = e.getRightClicked();
-            if (en instanceof Villager) {
+            if (Utils.isValidVillager(p, en)) {
                 // Store villager, player, and inventory
                 Villager v = (Villager) en;
-                Player p = e.getPlayer();
                 Inventory inv = p.getInventory();
-
-                // Check for permission
-                if (!Slimefun.getProtectionManager().hasPermission(p, p.getLocation(), Interaction.INTERACT_ENTITY)) {
-                    p.sendMessage(ChatColors.color("&cYou don't have permission!"));
-                    v.shakeHead();
-                    return;
-                }
 
                 // Check for villager tokens
                 if (!Utils.hasToken(p, inv)) {

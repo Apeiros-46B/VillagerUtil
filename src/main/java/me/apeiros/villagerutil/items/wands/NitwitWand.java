@@ -1,5 +1,13 @@
 package me.apeiros.villagerutil.items.wands;
 
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import me.apeiros.villagerutil.Setup;
+import me.apeiros.villagerutil.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -11,18 +19,6 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
-import me.apeiros.villagerutil.Setup;
-import me.apeiros.villagerutil.util.Utils;
 
 public class NitwitWand extends SlimefunItem {
 
@@ -42,19 +38,12 @@ public class NitwitWand extends SlimefunItem {
             e.setCancelled(true);
             
             // Check if the clicked entity is a villager
+            Player p = e.getPlayer();
             Entity en = e.getRightClicked();
-            if (en instanceof Villager) {
+            if (Utils.isValidVillager(p, en)) {
                 // Store villager, player, and inventory
                 Villager v = (Villager) en;
-                Player p = e.getPlayer();
                 Inventory inv = p.getInventory();
-
-                // Check for permission
-                if (!Slimefun.getProtectionManager().hasPermission(p, p.getLocation(), Interaction.INTERACT_ENTITY)) {
-                    p.sendMessage(ChatColors.color("&cYou don't have permission!"));
-                    v.shakeHead();
-                    return;
-                }
 
                 // Check if villager is a nitwit
                 if (v.getProfession() != Profession.NITWIT) {

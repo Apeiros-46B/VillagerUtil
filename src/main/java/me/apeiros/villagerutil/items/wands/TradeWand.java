@@ -1,7 +1,20 @@
 package me.apeiros.villagerutil.items.wands;
 
-import java.lang.ref.WeakReference;
-
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import me.apeiros.villagerutil.Setup;
+import me.apeiros.villagerutil.VillagerUtil;
+import me.apeiros.villagerutil.util.Utils;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,23 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
-
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
-import me.apeiros.villagerutil.Setup;
-import me.apeiros.villagerutil.VillagerUtil;
-import me.apeiros.villagerutil.util.Utils;
+import java.lang.ref.WeakReference;
 
 public class TradeWand extends SlimefunItem implements Listener {
 
@@ -53,20 +50,13 @@ public class TradeWand extends SlimefunItem implements Listener {
             e.setCancelled(true);
             
             // Check if the clicked entity is a villager
+            Player p = e.getPlayer();
             Entity en = e.getRightClicked();
-            if (en instanceof Villager) {
+            if (Utils.isValidVillager(p, en)) {
                 // Store villager, profession, player, and inventory
                 Villager v = (Villager) en;
                 Profession prof = v.getProfession();
-                Player p = e.getPlayer();
                 Inventory inv = p.getInventory();
-
-                // Check for permission
-                if (!Slimefun.getProtectionManager().hasPermission(p, p.getLocation(), Interaction.INTERACT_ENTITY)) {
-                    p.sendMessage(ChatColors.color("&cYou don't have permission!"));
-                    v.shakeHead();
-                    return;
-                }
 
                 // Check if the villager has no job or is a nitwit
                 if (prof == Profession.NONE || prof == Profession.NITWIT) {
