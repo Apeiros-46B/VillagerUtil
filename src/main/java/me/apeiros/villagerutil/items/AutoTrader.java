@@ -118,7 +118,7 @@ public class AutoTrader extends AContainer {
 
                 processor.endOperation(b);
             }
-        } else {
+        } else if (operation != null) {
             MachineRecipe next = findNextRecipe(menu);
             if (next != null) {
                 operation = new CraftingOperation(next);
